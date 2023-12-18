@@ -4,23 +4,28 @@ from tkinter import messagebox as ms
 import csv
 
 pass_verified = False
+username = ""
 def click():
-    global pass_verified
+    global pass_verified, username
     username = e1.get()
     password = e2.get()
+
     d = dict()
     with open("C:/Users/rithv/WORK/PES/Miniproject/user_acct_info.csv",'r') as csvfile:
         csv_reader = csv.reader(csvfile)
         for line in csv_reader:
             d[line[0]] = line[1]
-        if (username in d) and d[username] == password: 
+        if (username in d) and d[username] == password:
+            pass_verified = True 
             ms.showinfo('Message','Password verified')
-            pass_verified = True
         else:
             ms.showinfo('Message','Incorrect password')
 
 def verification():
     return pass_verified
+
+def acct():
+    return username
 
 def acct_creation():
     def add():
@@ -83,12 +88,3 @@ register_label.grid(row=3,column=0,sticky='e',padx=5,pady=10)
 register = Button(frame,text='Register',command=acct_creation, activeforeground='Black', activebackground='Blue',width=6,height=2)
 register.grid(row=3,column=1,sticky='w',padx=3,pady=10)
 root.mainloop()
-
-
-
-
-
-
-
-
-

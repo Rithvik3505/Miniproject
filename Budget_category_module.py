@@ -1,38 +1,47 @@
 from tkinter import *
 from tkinter import messagebox as ms
 import csv
+from Authentication_module import acct
 
-def record():
-    data = [entries[0].get(), entries[1].get(), entries[2].get(), entries[3].get()]
-    with open("C:/Users/rithv/WORK/PES/Miniproject/Budget_categories.csv",'a',newline='') as csvfile:
-        csv_writer=csv.writer(csvfile)
-        if data[0] != '' and data[1] != '' and data[2] != '' and data[3] != '':
-            csv_writer.writerow(data)
-            ms.showinfo('Message:','Data entered successfully')
-        else:
-            ms.showinfo('Message:','Please enter a value')
+usn = acct()
+class BudgetRecordWindow:
+    def __init__(self, master):
+        global usn
+        self.master = master
+        self.master.title("Centered Labels and Entries")
+        self.master.attributes('-fullscreen', True)
 
-root4 = Tk()
-root4.title("Centered Labels and Entries")
-root4.attributes('-fullscreen',True)
-#root4.geometry('1000x500')
+        self.frame = Frame(self.master)
+        self.frame.pack(padx=50, pady=200)
 
-frame = Frame(root4)
-frame.pack(padx=350, pady=350)  # Adjust padding as needed
+        self.labels = ["Budget Name:", "Username:", "Budget Category:", "Budget limit:", "Current Expense amount:", "Bill due date:", "Bill amount:"]
+        self.entries = [Entry(self.frame) for _ in range(len(self.labels))]
 
-labels = ["Budget Name:", "Username:", "Budget Category:", "Budget limit:"]
-entries = [Entry(frame) for j in range(len(labels))]
+        for i, label_text in enumerate(self.labels):
+            label = Label(self.frame, text=label_text)
+            label.config(font=(30))
+            label.grid(row=i, column=0, sticky="e", pady=10)
+            self.entries[i].grid(row=i, column=1, sticky="e", pady=10)
 
-for i, label_text in enumerate(labels):
-    label = Label(frame, text=label_text)
-    label.config(font=(30))
-    label.grid(row=i, column=0, sticky="e")
-    entries[i].grid(row=i, column=1,sticky="e")
+        submit = Button(self.frame, text='Submit', command=self.record, width=7, height=2)
+        submit.grid(row=7, column=0, sticky='e', padx=5)
+        quit_button = Button(self.frame, text='Quit', command=self.master.destroy, width=7, height=2)
+        quit_button.grid(row=7, column=1, sticky='w', padx=5)
 
-submit = Button(root4,text='Submit',command=record,width=7,height=2)
-submit.place(relx=0.49,rely=0.57,anchor='center')
-quit = Button(root4,text='Quit',command=root4.destroy,width=7,height=2)
-quit.place(relx=0.535, rely=0.57,anchor='center')
+    def record(self):
+        data = [entry.get() for entry in self.entries]
+        with open("C:/Users/rithv/WORK/PES/Miniproject/Budget_categories3.csv", 'a', newline='') as csvfile:
+            csv_writer = csv.writer(csvfile)
+            if all(data):
+                csv_writer.writerow(data)
+                ms.showinfo('Message:', 'Data entered successfully')
+            else:
+                ms.showinfo('Message:', 'Please enter a value')
 
-root4.mainloop()
+if __name__ == "__main__":
+    root = Tk()
+    app = BudgetRecordWindow(root)
+    root.mainloop()
+
+
 
